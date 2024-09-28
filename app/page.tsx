@@ -5,7 +5,30 @@ export default function Home() {
     <div className="bg-gray-100 flex flex-col">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center bg-black text-white text-center p-6">
-        
+        {/* Grid Background */}
+        <div className="absolute inset-0 bg-transparent z-0">
+          <div className="grid grid-cols-12 grid-rows-12 gap-0 w-full h-full">
+            {Array.from({ length: 12 * 12 }).map((_, index) => {
+              const isVertical = index % 6 === 0; // More vertical lines
+              const isThick = index % 4 === 0; // Thicker lines on every 4th index
+              return (
+                <div
+                  key={index}
+                  className={`border ${
+                    isThick ? "border-gray-300" : "border-gray-400"
+                  } opacity-50 ${isThick ? "border-2" : "border"}`} // Increased opacity and darker colors
+                  style={{
+                    width: isThick ? "100%" : "40%", // Thicker lines are full width
+                    height: isVertical ? (isThick ? "100%" : "50%") : "100%", // Vary height for vertical lines
+                    backgroundColor: isThick
+                      ? "rgba(255, 255, 255, 0.3)"
+                      : "rgba(255, 255, 255, 0.10)", // Adjusted colors for visibility
+                  }}
+                />
+              );
+            })}
+          </div>
+        </div>
 
         {/* Hero Content */}
         <div className="relative z-10 flex flex-col items-center max-w-2xl">

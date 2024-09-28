@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const sendHome = () => {
   window.location.href = "/";
@@ -9,11 +10,14 @@ const sendHome = () => {
 const Header = () => {
   return (
     <div>
-      <header className="bg-blue-700 text-white shadow-md">
+      <header className="bg-[#3c3f58] text-white shadow-md">
         <nav className="flex justify-between items-center container mx-auto p-4">
-          <button className="text-3xl font-extrabold transition duration-300 ease-in-out transform hover:scale-105" onClick={sendHome}>
+          <div className="flex gap-x-5">
+            <Image src="/gologo.png" alt="logo" width={30} height={30} />
+          <button className="text-2xl font-extrabold transition duration-300 ease-in-out transform hover:scale-105" onClick={sendHome}>
             Police Assistant
           </button>
+          </div>
           <ul className="flex space-x-8">
             <li>
               <Link
