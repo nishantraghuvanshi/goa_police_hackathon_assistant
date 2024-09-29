@@ -43,7 +43,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 p-4">
-      <div className="max-w-lg w-full bg-white rounded-lg shadow-md p-6">
+      <div className="max-w-7xl w-full bg-white rounded-lg shadow-md p-6">
         <h1 className="text-2xl font-bold mb-4 text-black">Chat Helper</h1>
 
         {/* Chat Section */}
