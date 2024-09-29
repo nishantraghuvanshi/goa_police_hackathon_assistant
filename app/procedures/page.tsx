@@ -1,6 +1,13 @@
 "use client";
 import { useState } from "react";
 
+// Define the Procedure type
+type Procedure = {
+  title: string;
+  questions: string[];
+};
+
+// Define the procedures and corresponding questions
 const procedures = [
   {
     title: "Lost Item",
@@ -42,7 +49,7 @@ const procedures = [
     questions: [
       "What is your address?",
       "Since when have you been residing at this address?",
-      "Is it a rented accommodation? If so, details of landlord.",
+      "Is it a rented accommodation? If so, details of the landlord.",
       "Who are living with you at your house?",
       "What is your occupation and where do you work? Details of owner.",
       "What is the purpose of seeking police verification?",
@@ -50,42 +57,37 @@ const procedures = [
   },
 ];
 
-type Procedure = {
-  title: string;
-  questions: string[];
-};
-
 export default function Procedures() {
-  const [selectedProcedure, setSelectedProcedure] = useState<Procedure | null>(
-    null
-  );
+  const [selectedProcedure, setSelectedProcedure] = useState<Procedure | null>(null);
   const [formData, setFormData] = useState({});
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleProcedureSelect = (procedure: {
-    title: string;
-    questions: string[];
-  }) => {
+  // Handle procedure selection
+  const handleProcedureSelect = (procedure: Procedure) => {
     setSelectedProcedure(procedure);
-    setFormData({}); // Reset form data when selecting a new procedure
-    setName(""); // Reset name
-    setContact(""); // Reset contact
+    setFormData({});
+    setName("");
+    setContact("");
+    setSuccessMessage("");
+    setErrorMessage("");
   };
 
-  interface FormData {
-    [key: string]: string;
-  }
-
+  // Handle input change
   const handleInputChange = (question: string, value: string) => {
-    setFormData((prevFormData: FormData) => ({
+    setFormData((prevFormData) => ({
       ...prevFormData,
       [question]: value,
     }));
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     // Prepare the data to send to the backend
     const dataToSend = {
@@ -96,24 +98,32 @@ export default function Procedures() {
     };
 
     try {
-      const response = await fetch("/api/submit-procedure", {
-        // Update with your backend endpoint
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dataToSend),
-      });
+      const response = await fetch(
+        "http://localhost:5000/api/submit-procedure",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataToSend),
+        }
+      );
 
       if (response.ok) {
-        // Handle successful response
-        console.log("Data submitted successfully");
+        setSuccessMessage("Procedure submitted successfully!");
+        setErrorMessage("");
+        // Reset form after submission
+        setFormData({});
+        setName("");
+        setContact("");
       } else {
-        // Handle error response
-        console.error("Error submitting data");
+        throw new Error("Failed to submit the procedure");
       }
     } catch (error) {
-      console.error("Network error:", error);
+      setErrorMessage("Error submitting the procedure. Please try again.");
+      setSuccessMessage("");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -142,6 +152,17 @@ export default function Procedures() {
             <h3 className="text-3xl font-bold mb-6 text-black">
               {selectedProcedure.title} Details
             </h3>
+
+            {/* Success/Error Messages */}
+            {successMessage && (
+              <p className="mb-4 text-green-600 font-semibold">
+                {successMessage}
+              </p>
+            )}
+            {errorMessage && (
+              <p className="mb-4 text-red-600 font-semibold">{errorMessage}</p>
+            )}
+
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label className="block text-lg font-medium text-gray-700 mb-2">
@@ -175,6 +196,7 @@ export default function Procedures() {
                   <input
                     type="text"
                     className="border rounded-lg p-2 w-full text-black"
+                    value={formData[question] || ""}
                     onChange={(e) =>
                       handleInputChange(question, e.target.value)
                     }
@@ -185,8 +207,9 @@ export default function Procedures() {
               <button
                 type="submit"
                 className="bg-blue-600 text-white font-bold px-4 py-2 rounded-lg"
+                disabled={loading}
               >
-                Submit
+                {loading ? "Submitting..." : "Submit"}
               </button>
             </form>
           </div>

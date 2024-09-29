@@ -40,7 +40,7 @@ export default function Home() {
             language barriers effortlessly.
           </p>
           <Link
-            href="/chatbot"
+            href="/help"
             className="bg-white text-blue-500 font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-gray-100 transition ease-in-out duration-200"
           >
             Start Chat
