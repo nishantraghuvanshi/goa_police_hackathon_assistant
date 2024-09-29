@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export default function Chatbot() {
   interface Message {
@@ -16,6 +16,14 @@ export default function Chatbot() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null); // MediaRecorder reference to manage recording
   const audioChunksRef = useRef([]); // Store the audio data
 
+  // Ref for the last message element to scroll into view
+  const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
+
+  // Function to scroll to the latest message
+  const scrollToBottom = () => {
+    endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   // Handle sending text messages
   const handleSend = async () => {
     if (inputValue.trim() === "") return;
@@ -28,6 +36,11 @@ export default function Chatbot() {
 
     setInputValue(""); // Clear input field
   };
+
+  // Scroll to the bottom when messages are updated
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   // Start recording audio
   const startRecording = () => {
@@ -164,7 +177,9 @@ export default function Chatbot() {
                       >
                         <div className="font-semibold text-lg">Bot:</div>
                         <div className="mt-1 text-sm">
-                          <span className="text-blue-300">{message.text}</span>
+                          <span className="text-white font-semibold">
+                            {message.text}
+                          </span>
                         </div>
                       </div>
                     ) : (
@@ -182,6 +197,8 @@ export default function Chatbot() {
                 ))}
               </ul>
             )}
+            {/* This div will be used to automatically scroll to the latest message */}
+            <div ref={endOfMessagesRef} />
           </div>
 
           {/* Input and recording section fixed at the bottom */}

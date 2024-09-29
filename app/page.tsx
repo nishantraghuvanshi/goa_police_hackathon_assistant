@@ -49,26 +49,28 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="container mx-auto py-16 px-4">
-        <h3 className="text-3xl font-bold text-center mb-12">Features</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <section id="features" className="container mx-auto py-20 px-4">
+        <h3 className="text-4xl font-bold text-center mb-12 text-black">
+          Features
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {/* Feature 1 */}
-          <div className="bg-slate-600 p-8 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow duration-200">
-            <h4 className="text-xl font-semibold mb-4 text-blue-500">
+          <div className="bg-slate-600 p-10 rounded-lg shadow-lg text-center hover:shadow-xl transition-shadow duration-200">
+            <h4 className="text-2xl font-semibold mb-4 text-blue-500">
               Multilingual Support
             </h4>
-            <p>
+            <p className="text-base">
               Interact in multiple languages, with both text and speech support
               for smooth communication.
             </p>
           </div>
 
           {/* Feature 2 */}
-          <div className="bg-slate-600 p-8 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow duration-200">
-            <h4 className="text-xl font-semibold mb-4 text-blue-500">
+          <div className="bg-slate-600 p-10 rounded-lg shadow-lg text-center hover:shadow-xl transition-shadow duration-200">
+            <h4 className="text-2xl font-semibold mb-4 text-blue-500">
               Step-by-Step Guidance
             </h4>
-            <p>
+            <p className="text-base">
               Receive detailed instructions for filing police reports and other
               procedures.
             </p>
@@ -81,11 +83,11 @@ export default function Home() {
           </div>
 
           {/* Feature 3 */}
-          <div className="bg-slate-600 p-8 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow duration-200">
-            <h4 className="text-xl font-semibold mb-4 text-blue-500">
+          <div className="bg-slate-600 p-10 rounded-lg shadow-lg text-center hover:shadow-xl transition-shadow duration-200">
+            <h4 className="text-2xl font-semibold mb-4 text-blue-500">
               Anonymous Tips
             </h4>
-            <p>
+            <p className="text-base">
               Send anonymous tips securely using predefined codes, ensuring
               privacy and safety.
             </p>
@@ -100,9 +102,9 @@ export default function Home() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="bg-gray-800 py-16 px-4 text-white">
+      <section id="about" className="bg-gray-800 py-20 px-4 text-white">
         <div className="container mx-auto text-center">
-          <h3 className="text-3xl font-bold mb-6">About This Project</h3>
+          <h3 className="text-4xl font-bold mb-6">About This Project</h3>
           <p className="text-lg max-w-2xl mx-auto">
             This AI-based assistant is designed to help visitors at police
             stations by providing basic legal knowledge, guiding them through
