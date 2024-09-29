@@ -1,20 +1,40 @@
 "use client";
-
 import { useState, useRef, useEffect } from "react";
 
 export default function Chatbot() {
+  // Define the interface for messages
   interface Message {
     sender: string;
     text: string;
     audio?: string;
   }
 
-  const [messages, setMessages] = useState<Message[]>([]); // Store chat messages (text and voice)
-  const [inputValue, setInputValue] = useState(""); // Store input value for text
+  // Language code mapping
+  const languageCodes = {
+    Kannada: "kn",
+    Tamil: "ta",
+    Telugu: "te",
+    Malayalam: "ml",
+    Bodo: "brx",
+    English: "en",
+    Meitei: "mni",
+    Odia: "or",
+    Marathi: "mr",
+    Punjabi: "pa",
+    Gujarati: "gu",
+    Bengali: "bn",
+    Hindi: "hi",
+    Assamese: "as",
+    Rajasthani: "raj",
+  };
+
+  const [messages, setMessages] = useState<Message[]>([]); // Store chat messages
+  const [inputValue, setInputValue] = useState(""); // Store input value
   const [isRecording, setIsRecording] = useState(false); // Track if recording is active
   const [audioUrl, setAudioUrl] = useState<string | undefined>(undefined); // Store the audio URL for playback
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null); // MediaRecorder reference to manage recording
-  const audioChunksRef = useRef([]); // Store the audio data
+  const [selectedLanguage, setSelectedLanguage] = useState("English"); // Store the selected language
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null); // MediaRecorder reference
+  const audioChunksRef = useRef([]); // Store audio data
 
   // Ref for the last message element to scroll into view
   const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
@@ -87,6 +107,7 @@ export default function Chatbot() {
   const sendAudioToBackend = async (audioBlob: Blob) => {
     const formData = new FormData();
     formData.append("audio", audioBlob, "recording.wav");
+    formData.append("languageCode", languageCodes[selectedLanguage]); // Include language code
 
     try {
       const response = await fetch("http://localhost:5000/api/upload-audio", {
@@ -107,6 +128,14 @@ export default function Chatbot() {
         text: data.transcription || "Audio received!",
       };
       setMessages((prevMessages) => [...prevMessages, botMessage]);
+
+      const audioBuffer = Buffer.from(data.audio, "base64"); // Decoding base64 to binary
+      const blob = new Blob([audioBuffer], { type: "audio/wav" });
+
+      // Create a URL for the Blob and play the audio
+      const audioUrl = URL.createObjectURL(blob);
+      const audio = new Audio(audioUrl);
+      audio.play();
     } catch (error) {
       console.error("Error sending audio:", error);
     }
@@ -141,7 +170,6 @@ export default function Chatbot() {
     }
   };
 
-  // Render the chat interface
   return (
     <div className="min-h-screen flex flex-col bg-gray-900">
       <div className="flex-grow flex flex-col items-center justify-center p-6">
@@ -149,6 +177,25 @@ export default function Chatbot() {
           <h2 className="text-3xl font-semibold mb-6 text-center text-white">
             Police Assistant
           </h2>
+
+          {/* Language Selection Dropdown */}
+          <div className="mb-4">
+            <label htmlFor="language" className="text-white mb-2 block">
+              Select Language:
+            </label>
+            <select
+              id="language"
+              value={selectedLanguage}
+              onChange={(e) => setSelectedLanguage(e.target.value)}
+              className="p-2 bg-gray-700 border border-gray-600 text-white rounded-lg"
+            >
+              {Object.keys(languageCodes).map((language) => (
+                <option key={language} value={language}>
+                  {language}
+                </option>
+              ))}
+            </select>
+          </div>
 
           {/* Chat messages section */}
           <div className="flex-grow bg-gray-700 p-4 rounded-lg mb-4 overflow-y-auto max-h-[60vh] border border-gray-600">
@@ -197,11 +244,10 @@ export default function Chatbot() {
                 ))}
               </ul>
             )}
-            {/* This div will be used to automatically scroll to the latest message */}
             <div ref={endOfMessagesRef} />
           </div>
 
-          {/* Input and recording section fixed at the bottom */}
+          {/* Input and recording section */}
           <div className="fixed bottom-0 left-0 w-full bg-gray-800 p-4">
             <div className="flex items-center space-x-3 max-w-4xl mx-auto">
               <input
@@ -210,37 +256,35 @@ export default function Chatbot() {
                 placeholder="Type your message here..."
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleSend()} // Send on Enter key
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") handleSend();
+                }}
               />
+
               <button
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
+                className="p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-500"
                 onClick={handleSend}
               >
                 Send
               </button>
-              <button
-                className={`px-6 py-3 rounded-lg shadow-md text-white transition duration-300 ${
-                  isRecording
-                    ? "bg-red-500 hover:bg-red-600"
-                    : "bg-green-500 hover:bg-green-600"
-                }`}
-                onClick={isRecording ? stopRecording : startRecording}
-              >
-                {isRecording ? "Stop Recording" : "Record Voice Note"}
-              </button>
+
+              {isRecording ? (
+                <button
+                  className="p-3 bg-red-600 text-white rounded-lg hover:bg-red-500"
+                  onClick={stopRecording}
+                >
+                  Stop
+                </button>
+              ) : (
+                <button
+                  className="p-3 bg-green-600 text-white rounded-lg hover:bg-green-500"
+                  onClick={startRecording}
+                >
+                  Record
+                </button>
+              )}
             </div>
           </div>
-
-          {/* Play back the recorded voice note */}
-          {audioUrl && (
-            <div className="mt-4">
-              <audio
-                controls
-                src={audioUrl}
-                className="rounded-lg shadow bg-gray-500"
-              />
-            </div>
-          )}
         </div>
       </div>
     </div>

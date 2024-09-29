@@ -30,14 +30,14 @@ const Header = () => {
                 Procedures
               </Link>
             </li>
-            {/* <li>
+            <li>
               <Link
                 href="/chatbot"
                 className="transition duration-300 ease-in-out hover:bg-blue-600 rounded-md p-3 font-semibold"
               >
                 Chatbot
               </Link>
-            </li> */}
+            </li>
             <li>
               <Link
                 href="/report-issue"
