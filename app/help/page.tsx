@@ -71,7 +71,7 @@ export default function Home() {
         {/* Response Display */}
         {response && (
           <div className="bg-gray-100 rounded-lg p-4">
-            <h2 className="text-lg font-semibold">Response:</h2>
+            <h2 className="text-lg font-semibold text-black">Response:</h2>
             <p className="text-gray-700">{response}</p>
           </div>
         )}
