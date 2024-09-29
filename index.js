@@ -167,7 +167,7 @@ app.post("/api/upload-audio", upload.single("audio"), async (req, res) => {
             preProcessors: [],
             samplingRate: 16000,
             serviceId: 'ai4bharat/conformer-multilingual-all--gpu-t4',
-            sourceLanguage: 'gu',
+            sourceLanguage: 'hi',
             task: 'asr',
             track: true
         };
@@ -201,11 +201,11 @@ app.post("/api/upload-audio", upload.single("audio"), async (req, res) => {
         });
         
         const toBeTranslated = (await botResp.json()).response;
-        const translationLocal = await translate(toBeTranslated, { to: 'gu' });
+        const translationLocal = await translate(toBeTranslated, { to: 'hi' });
         console.log('Translation:', translationLocal.text);
 
         payload = {
-            sourceLanguage: 'gu',
+            sourceLanguage: 'hi',
             input: translationLocal.text,
             task: 'tts',
             serviceId: 'ai4bharat/indic-tts-indo-aryan--gpu-t4',
