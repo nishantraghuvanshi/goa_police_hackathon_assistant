@@ -13,6 +13,7 @@ export default function Chatbot() {
   const [inputValue, setInputValue] = useState(""); // Store input value for text
   const [isRecording, setIsRecording] = useState(false); // Track if recording is active
   const [audioUrl, setAudioUrl] = useState<string | undefined>(undefined); // Store the audio URL for playback
+  const [selectedLanguage, setSelectedLanguage] = useState("English"); // Store the selected language
   const mediaRecorderRef = useRef<MediaRecorder | null>(null); // MediaRecorder reference to manage recording
   const audioChunksRef = useRef([]); // Store the audio data
 
@@ -87,6 +88,7 @@ export default function Chatbot() {
   const sendAudioToBackend = async (audioBlob: Blob) => {
     const formData = new FormData();
     formData.append("audio", audioBlob, "recording.wav");
+    formData.append("language", selectedLanguage); // Include the selected language
 
     try {
       const response = await fetch("http://localhost:5000/api/upload-audio", {
@@ -115,7 +117,6 @@ export default function Chatbot() {
       const audioUrl = URL.createObjectURL(blob);
       const audio = new Audio(audioUrl);
       audio.play();
-
     } catch (error) {
       console.error("Error sending audio:", error);
     }
@@ -158,6 +159,35 @@ export default function Chatbot() {
           <h2 className="text-3xl font-semibold mb-6 text-center text-white">
             Police Assistant
           </h2>
+
+          {/* Language selection dropdown */}
+          <div className="mb-4">
+            <label className="text-white font-semibold">
+              Select Language:{" "}
+            </label>
+            <select
+              value={selectedLanguage}
+              onChange={(e) => setSelectedLanguage(e.target.value)}
+              className="ml-2 p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="Kannada">Kannada</option>
+              <option value="Tamil">Tamil</option>
+              <option value="Telugu">Telugu</option>
+              <option value="Malayalam">Malayalam</option>
+              <option value="Bodo">Bodo</option>
+              <option value="English">English</option>
+              <option value="Meitei (Manipuri)">Meitei (Manipuri)</option>
+              <option value="Odia">Odia</option>
+              <option value="Marathi">Marathi</option>
+              <option value="Punjabi">Punjabi</option>
+              <option value="Gujarati">Gujarati</option>
+              <option value="Bengali">Bengali</option>
+              <option value="Hindi">Hindi</option>
+              <option value="Assamese">Assamese</option>
+              <option value="Rajasthani">Rajasthani</option>
+              <option value="Konkani">Konkani</option>
+            </select>
+          </div>
 
           {/* Chat messages section */}
           <div className="flex-grow bg-gray-700 p-4 rounded-lg mb-4 overflow-y-auto max-h-[60vh] border border-gray-600">
