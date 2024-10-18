@@ -148,6 +148,9 @@ app.post("/api/send-message", async (req, res) => {
 // Route to handle audio uploads (remaining unchanged)
 app.post("/api/upload-audio", upload.single("audio"), async (req, res) => {
     const file = req.file;
+    const languageCode= req.body.languageCode;
+
+    console.log(languageCode);
 
     if (!file) {
         return res.status(400).send("No audio file uploaded");
@@ -166,7 +169,7 @@ app.post("/api/upload-audio", upload.single("audio"), async (req, res) => {
             preProcessors: [],
             samplingRate: 16000,
             serviceId: 'ai4bharat/conformer-multilingual-all--gpu-t4',
-            sourceLanguage: 'hi',
+            sourceLanguage: languageCode,
             task: 'asr',
             track: true
         };
@@ -191,20 +194,20 @@ app.post("/api/upload-audio", upload.single("audio"), async (req, res) => {
         const translationEnglish = await translate(transcription, { to: 'en' });
         console.log('Translation:', translationEnglish.text);
 
-        const botResp = await fetch("http://localhost:5000/api/send-message", {
+        const botResp = await fetch("http://localhost:5000/api/chat-with-pdf", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ message: translationEnglish.text }),
+            body: JSON.stringify({ question: translationEnglish.text }),
         });
         
         const toBeTranslated = (await botResp.json()).response;
-        const translationLocal = await translate(toBeTranslated, { to: 'hi' });
+        const translationLocal = await translate(toBeTranslated, { to: languageCode });
         console.log('Translation:', translationLocal.text);
 
         payload = {
-            sourceLanguage: 'hi',
+            sourceLanguage: languageCode,
             input: translationLocal.text,
             task: 'tts',
             serviceId: 'ai4bharat/indic-tts-indo-aryan--gpu-t4',
