@@ -15,17 +15,17 @@ const Header = () => {
           <div className="flex gap-x-5">
             <Image src="/gologo.png" alt="logo" width={30} height={30} />
             <button
-              className="text-2xl font-extrabold transition duration-300 ease-in-out transform hover:scale-105"
+              className="text-2xl md:text-4xl font-extrabold transition duration-300 ease-in-out transform hover:scale-105 hidden sm:block"
               onClick={sendHome}
             >
               Police Assistant
             </button>
           </div>
-          <ul className="flex space-x-8">
+          <ul className="flex space-x-4 md:space-x-8">
             <li>
               <Link
                 href="/procedures"
-                className="transition duration-300 ease-in-out hover:bg-blue-600 rounded-md p-3 font-semibold"
+                className="transition duration-300 ease-in-out hover:bg-blue-600 rounded-md p-2 md:p-3 font-semibold text-sm md:text-base"
               >
                 Procedures
               </Link>
@@ -33,7 +33,7 @@ const Header = () => {
             <li>
               <Link
                 href="/chatbot"
-                className="transition duration-300 ease-in-out hover:bg-blue-600 rounded-md p-3 font-semibold"
+                className="transition duration-300 ease-in-out hover:bg-blue-600 rounded-md p-2 md:p-3 font-semibold text-sm md:text-base"
               >
                 Chatbot
               </Link>
@@ -41,17 +41,9 @@ const Header = () => {
             <li>
               <Link
                 href="/report-issue"
-                className="transition duration-300 ease-in-out hover:bg-blue-600 rounded-md p-3 font-semibold"
+                className="transition duration-300 ease-in-out hover:bg-blue-600 rounded-md p-2 md:p-3 font-semibold text-sm md:text-base"
               >
                 Report an Issue
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/help"
-                className="transition duration-300 ease-in-out hover:bg-blue-600 rounded-md p-3 font-semibold"
-              >
-                Help
               </Link>
             </li>
           </ul>
