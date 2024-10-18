@@ -8,7 +8,6 @@ const path = require("path");
 const FormData = require("form-data");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const translate = require('@iamtraction/google-translate');
-const { ConnectionCheckOutStartedEvent } = require("mongodb");
 
 // Initialize Express app
 const app = express();
@@ -29,7 +28,7 @@ const API_KEY = "AIzaSyBYFQFDRboSL-9zzIF37ftCIEzvKh34oGA";
 // ChatPDF API Key (replace with your key)
 const CHATPDF_API_KEY = "sec_eepONxpA9ckDQlFvSB3MrcnkMngzKBB9";
 
-const sourceId = "src_sIQLI7XdMlOCNpeMPg0c6";
+const sourceId = "cha_k3Q81T9gbqzrMVM7IQrkm";
 const sourceId1 = "src_QxeyWHeItNqFuMtLGnmAE";
 
 // Route to handle anonymous tip submission
@@ -245,7 +244,7 @@ app.post("/api/chat-with-pdf", async (req, res) => {
 
     try {
         const data = {
-            sourceId: sourceId1,
+            sourceId: sourceId,
             messages: [
                 {
                     role: "user",
@@ -261,15 +260,14 @@ app.post("/api/chat-with-pdf", async (req, res) => {
             },
         };
 
-        // Make request to ChatPDF to ask a question about the PDF
         const response = await axios.post(
             "https://api.chatpdf.com/v1/chats/message",
             data,
             options
         );
 
-        // Send back ChatPDF's response content to the frontend
-        const chatResponse = response.data.content;
+        let chatResponse = response.data.content;
+        chatResponse = chatResponse.replace(/\*/g, "");
         res.json({ response: chatResponse });
     } catch (error) {
         console.error("Error with ChatPDF API:", error.response?.data || error.message);
